@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './App.css';
 import { getNumbers } from './utils';
 import { Pagination } from './components/Pagination';
+import { useSearchParams } from 'react-router-dom';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const items = getNumbers(1, 42).map(n => `Item ${n}`);
@@ -15,8 +16,10 @@ function spliceItems(
 }
 
 export const App: React.FC = () => {
-  const [itemsPerPage, setItemsPerPage] = useState(5);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const itemsPerPage = Number(searchParams.get('perPage')) || 5;
+  const currentPage = Number(searchParams.get('page')) || 1;
 
   const total = items.length;
   const start = (currentPage - 1) * itemsPerPage;
@@ -27,12 +30,13 @@ export const App: React.FC = () => {
   const onItemsPerPageChange = (
     event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
-    setItemsPerPage(Number(event.target.value));
-    setCurrentPage(1);
+    const perPage = Number(event.target.value);
+
+    setSearchParams({ page: '1', perPage: String(perPage) });
   };
 
   const onPageChange = (page: number) => {
-    setCurrentPage(page);
+    setSearchParams({ page: String(page), perPage: String(itemsPerPage) });
   };
 
   return (
