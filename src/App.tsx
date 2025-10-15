@@ -31,7 +31,7 @@ export const App: React.FC = () => {
 
   const splicedItems = spliceItems(items, start, end);
 
-  const HandleItemsPerPageChange = (
+  const handleItemsPerPageChange = (
     event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     const perPage = Number(event.target.value);
@@ -58,7 +58,7 @@ export const App: React.FC = () => {
             id="perPageSelector"
             className="form-control"
             value={itemsPerPage}
-            onChange={HandleItemsPerPageChange}
+            onChange={handleItemsPerPageChange}
           >
             <option value="3">3</option>
             <option value="5">5</option>

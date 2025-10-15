@@ -12,6 +12,12 @@ export const PaginationItem: React.FC<Props> = ({
   isCurrent,
   onPageChange,
 }) => {
+  const handlePageClick = (page: number) => {
+    if (!isCurrent) {
+      onPageChange(page);
+    }
+  };
+
   return (
     <li className={cn('page-item', { active: isCurrent })}>
       <a
@@ -19,7 +25,7 @@ export const PaginationItem: React.FC<Props> = ({
         className="page-link"
         href={`#${pageNum}`}
         onClick={() => {
-          onPageChange(pageNum);
+          handlePageClick(pageNum);
         }}
       >
         {pageNum}
