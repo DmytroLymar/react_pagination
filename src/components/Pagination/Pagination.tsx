@@ -1,5 +1,6 @@
 import cn from 'classnames';
 import React from 'react';
+import { PaginationItem } from '../PaginationItem';
 
 type Props = {
   total: number;
@@ -14,16 +15,16 @@ export const Pagination: React.FC<Props> = ({
   currentPage = 1,
   onPageChange,
 }) => {
-  const pageCount = Math.max(1, Math.ceil(total / itemsPerPage));
-  const canNext = currentPage < pageCount;
-  const canPrev = currentPage > 1;
-  const pages = Array.from({ length: pageCount }, (_, index) => index + 1);
+  const FIRST_PAGE = 1;
+  const MIN_PAGE_COUNT = 1;
 
-  const onSelectPage = (page: number) => {
-    if (page !== currentPage && page >= 1 && page <= pageCount) {
-      onPageChange(page);
-    }
-  };
+  const pageCount = Math.max(MIN_PAGE_COUNT, Math.ceil(total / itemsPerPage));
+  const canNext = currentPage < pageCount;
+  const canPrev = currentPage > FIRST_PAGE;
+  const pages = Array.from(
+    { length: pageCount },
+    (_, index) => index + FIRST_PAGE,
+  );
 
   return (
     <ul className="pagination">
@@ -33,9 +34,8 @@ export const Pagination: React.FC<Props> = ({
           className="page-link"
           href="#prev"
           aria-disabled={!canPrev}
-          onClick={event => {
-            event.preventDefault();
-            onSelectPage(currentPage - 1);
+          onClick={() => {
+            onPageChange(currentPage - 1);
           }}
         >
           «
@@ -45,19 +45,12 @@ export const Pagination: React.FC<Props> = ({
         const isCurrent = page === currentPage;
 
         return (
-          <li key={page} className={cn('page-item', { active: isCurrent })}>
-            <a
-              data-cy="pageLink"
-              className="page-link"
-              href={`#${page}`}
-              onClick={event => {
-                event.preventDefault();
-                onSelectPage(page);
-              }}
-            >
-              {page}
-            </a>
-          </li>
+          <PaginationItem
+            key={page}
+            pageNum={page}
+            isCurrent={isCurrent}
+            onPageChange={onPageChange}
+          />
         );
       })}
       <li className={cn('page-item', { disabled: !canNext })}>
@@ -66,9 +59,8 @@ export const Pagination: React.FC<Props> = ({
           className="page-link"
           href="#next"
           aria-disabled={!canNext}
-          onClick={event => {
-            event.preventDefault();
-            onSelectPage(currentPage + 1);
+          onClick={() => {
+            onPageChange(currentPage + 1);
           }}
         >
           »

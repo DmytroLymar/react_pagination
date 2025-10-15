@@ -16,10 +16,14 @@ function spliceItems(
 }
 
 export const App: React.FC = () => {
+  const DEFAULT_ITEMS_PER_PAGE = 5;
+  const DEFAULT_PAGE = 1;
+
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const itemsPerPage = Number(searchParams.get('perPage')) || 5;
-  const currentPage = Number(searchParams.get('page')) || 1;
+  const itemsPerPage =
+    Number(searchParams.get('perPage')) || DEFAULT_ITEMS_PER_PAGE;
+  const currentPage = Number(searchParams.get('page')) || DEFAULT_PAGE;
 
   const total = items.length;
   const start = (currentPage - 1) * itemsPerPage;
@@ -27,7 +31,7 @@ export const App: React.FC = () => {
 
   const splicedItems = spliceItems(items, start, end);
 
-  const onItemsPerPageChange = (
+  const HandleItemsPerPageChange = (
     event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     const perPage = Number(event.target.value);
@@ -35,7 +39,7 @@ export const App: React.FC = () => {
     setSearchParams({ page: '1', perPage: String(perPage) });
   };
 
-  const onPageChange = (page: number) => {
+  const handlePageChange = (page: number) => {
     setSearchParams({ page: String(page), perPage: String(itemsPerPage) });
   };
 
@@ -54,7 +58,7 @@ export const App: React.FC = () => {
             id="perPageSelector"
             className="form-control"
             value={itemsPerPage}
-            onChange={onItemsPerPageChange}
+            onChange={HandleItemsPerPageChange}
           >
             <option value="3">3</option>
             <option value="5">5</option>
@@ -72,7 +76,7 @@ export const App: React.FC = () => {
         total={total}
         itemsPerPage={itemsPerPage}
         currentPage={currentPage}
-        onPageChange={onPageChange}
+        onPageChange={handlePageChange}
       />
       <ul>
         {splicedItems.map(el => (
